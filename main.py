@@ -31,7 +31,10 @@ def main():
     st.header("트렌드를 분석하는 <11조>입니다.💫")
     st.markdown("---")
 
+    title = st.text_input('검색어를 입력해주세요.')
+
     ### 칼럼
+    
     flag_start = False
     
     openai.api_key = os.environ['OPENAI_KEY']
