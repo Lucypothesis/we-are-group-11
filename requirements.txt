@@ -1,7 +1,7 @@
 gTTS==2.3.1
 numpy==1.24.2
 openai==0.28.0
-streamlit==1.20.0
+streamlit
 streamlit-audiorecorder==0.0.2
 plotly
 matplotlib
