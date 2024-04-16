@@ -8,6 +8,18 @@ matplotlib
 yfinance
 pydub
 scikit-learn
+selenium
+wedriver-manager
+wordcloud
+
+# import time
+# import pandas as pd
+# from wordcloud import WordCloud
+# from datetime import datetime
+# from PIL import Image
+# import base64
+# import os
+# import pandas as pd
 
 # gTTS
 # numpy
