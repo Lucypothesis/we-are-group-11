@@ -101,6 +101,7 @@ def main():
 
         keywords2 = []
         one_line2 = []
+
         openai.api_key = os.environ['OPENAI_KEY']
 
         for abstract in abstracts:
@@ -188,12 +189,6 @@ def main():
         os.remove(filename)
         return transcript["text"]
     
-    def ask_gpt(prompt):
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=prompt)
-        return response.choices[0].message['content']
-    
     def TTS(response):
         # gTTS 를 활용하여 음성 파일 생성
         filename = "output.mp3"
@@ -213,13 +208,13 @@ def main():
         # 파일 삭제
         os.remove(filename)
     # ---------------------------------------
-    def process_csv(file):
-        df = pd.read_csv(file)
-        summary = df.describe().to_string()  # DataFrame을 문자열로 변환
-        return summary
+    # CSV 파일 경로
+    file_path = r"arxiv_crawling.csv"
+    # CSV 파일 읽기
+    data = pd.read_csv(file_path)
     # ---------------------------------------
-    file_path = 'arxiv_word_cloud.png'
-    if os.path.exists(file_path):
+    wordcloud_path = 'arxiv_word_cloud.png'
+    if os.path.exists(wordcloud_path):
             st.success('Done!')
     ### 칼럼
     col1, col2, col3 =  st.columns([3,3,3])
@@ -247,21 +242,36 @@ def main():
             st.session_state["check_audio"] = audio
             flag_start =True
 
+    def process_csv(file_path):
+        df = pd.read_csv(file_path)
+
+        title_lst = df['제목'].tolist()
+        author_lst = df['저자'].tolist()
+        abstract_lst = df['초록'].tolist()
+        date_lst = df['게재일'].tolist() 
+        summary_lst = df['한 줄 요약'].tolist()
+        keyword_lst = df['키워드'].tolist()
+        data_lst = [title_lst, author_lst, abstract_lst, date_lst, summary_lst, keyword_lst]
+        					
+        return data_lst
+    
+    def ask_gpt(prompt):
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=prompt)
+        return response['choices'][0].message['content']
+    
     with col3:
         st.subheader("질문/답변")
         if flag_start:
             #ChatGPT에게 답변 얻기
-            response = ask_gpt(st.session_state["messages"])
+            response = ask_gpt(question)
 
             # GPT 모델에 넣을 프롬프트를 위해 답변 내용 저장
             st.session_state["messages"] = st.session_state["messages"]+ [{"role": "system", "content": response}]
 
             # 채팅 시각화를 위한 답변 내용 저장
             now = datetime.now().strftime("%H:%M")
-            prompt = [{"role": "system", "content": "You are an analytical assistant capable of understanding detailed CSV data."},
-                    {"role": "user", "content": process_csv('arxiv_crawling.csv')},
-                    {"role": "user", "content": question}]
-            response = ask_gpt(prompt)
             st.session_state["chat"].append(("bot", now, response))
 
             # 채팅 형식으로 시각화 하기
