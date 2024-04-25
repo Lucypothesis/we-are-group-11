@@ -8,7 +8,6 @@ matplotlib
 yfinance
 pydub
 scikit-learn
-selenium==4.19.0
 wedriver-manager
 wordcloud
 
