@@ -4,12 +4,12 @@ openai==0.28.0
 streamlit
 streamlit-audiorecorder==0.0.2
 selenium
+wedriver-manager
 # plotly
 # matplotlib
 # yfinance
 # pydub
 # scikit-learn
-# wedriver-manager
 # wordcloud
 
 # import time
